@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instagram Cloud</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-tags" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
+      <symbol id="i-words" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></symbol>
+      <symbol id="i-time" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-mosaic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+      <symbol id="i-tune" viewBox="0 0 24 24"><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2.5"/><circle cx="10" cy="12" r="2.5"/><circle cx="18" cy="18" r="2.5"/></symbol>
+      <symbol id="i-fly" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    </defs>
+  </svg>
+</head>
+<body>
+  <canvas id="gl" aria-label="Instagram posts as a 3D graph"></canvas>
+  <div id="labels" aria-hidden="true"></div>
+  <div id="tip" class="glass" hidden></div>
+  <div id="hint" class="glass" hidden></div>
+  <div id="crosshair" aria-hidden="true"></div>
+
+  <div id="chrome">
+    <header id="brand" class="glass">
+      <span class="avatar"><img id="avatar" alt=""></span>
+      <span class="who">
+        <span id="handle">Instagram Cloud</span>
+        <span id="status">loading…</span>
+      </span>
+    </header>
+
+    <label id="searchbox" class="glass">
+      <svg class="ic"><use href="#i-search"/></svg>
+      <input type="search" id="search" placeholder="Search captions" aria-label="Search captions" autocomplete="off">
+      <kbd>/</kbd>
+    </label>
+
+    <section id="panel" class="glass" aria-label="Tune" hidden>
+      <h2>Tune</h2>
+      <label class="slider" data-modes="tags words">
+        <span>Hubs</span><output for="k"></output>
+        <input type="range" id="k" min="3" max="60" value="16">
+      </label>
+      <label class="slider" data-modes="tags words time">
+        <span>Link length</span><output for="link"></output>
+        <input type="range" id="link" min="5" max="120" value="30">
+      </label>
+      <label class="slider" data-modes="tags words time">
+        <span>Repulsion</span><output for="charge"></output>
+        <input type="range" id="charge" min="5" max="200" value="40">
+      </label>
+      <label class="slider" data-modes="mosaic">
+        <span>Resolution</span><output for="res"></output>
+        <input type="range" id="res" min="16" max="160" value="72">
+      </label>
+      <label class="slider" data-modes="mosaic">
+        <span>Detail</span><output for="detail"></output>
+        <input type="range" id="detail" min="0" max="100" value="60">
+      </label>
+      <label class="slider" data-modes="mosaic">
+        <span>Variety</span><output for="variety"></output>
+        <input type="range" id="variety" min="0" max="100" value="40">
+      </label>
+      <label class="slider" data-modes="mosaic">
+        <span>Color mapping</span><output for="tint"></output>
+        <input type="range" id="tint" min="0" max="100" value="70">
+      </label>
+      <label class="slider" data-modes="mosaic">
+        <span>Depth</span><output for="depth"></output>
+        <input type="range" id="depth" min="0" max="100" value="45">
+      </label>
+      <label class="slider">
+        <span>Tile size</span><output for="tile"></output>
+        <input type="range" id="tile" min="2" max="40" value="14">
+      </label>
+      <div class="switches" data-modes="tags words time">
+        <label class="switch"><input type="checkbox" id="edges" checked><i></i>Edges</label>
+        <label class="switch"><input type="checkbox" id="showLabels" checked><i></i>Labels</label>
+        <label class="switch"><input type="checkbox" id="spin" checked><i></i>Spin</label>
+      </div>
+      <div class="switches" data-modes="mosaic">
+        <label class="switch"><input type="checkbox" id="uniform" checked><i></i>Same size</label>
+        <label class="switch"><input type="checkbox" id="round"><i></i>Round</label>
+      </div>
+    </section>
+
+    <nav id="dock" class="glass" aria-label="Controls">
+      <div class="seg" role="group" aria-label="Mode">
+        <span class="pill" aria-hidden="true"></span>
+        <button data-mode="tags" class="on" title="Cluster by hashtags (1)"><svg class="ic"><use href="#i-tags"/></svg><span>Tags</span></button>
+        <button data-mode="words" title="Cluster by caption words (2)"><svg class="ic"><use href="#i-words"/></svg><span>Words</span></button>
+        <button data-mode="time" title="Timeline (3)"><svg class="ic"><use href="#i-time"/></svg><span>Time</span></button>
+        <button data-mode="mosaic" title="Portrait mosaic (4)"><svg class="ic"><use href="#i-mosaic"/></svg><span>Mosaic</span></button>
+      </div>
+      <span class="sep"></span>
+      <button class="icon" id="view" data-modes="mosaic" title="Sweet-spot view"><svg class="ic"><use href="#i-eye"/></svg></button>
+      <button class="icon" id="fit" title="Fit all"><svg class="ic"><use href="#i-fit"/></svg></button>
+      <button class="icon" id="flymode" title="Fly (F, or just press WASD)" aria-pressed="false"><svg class="ic"><use href="#i-fly"/></svg></button>
+      <button class="icon" id="shake" title="Shake"><svg class="ic"><use href="#i-zap"/></svg></button>
+      <button class="icon" id="tune" title="Tune" aria-expanded="false" aria-controls="panel"><svg class="ic"><use href="#i-tune"/></svg></button>
+    </nav>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
