@@ -225,6 +225,14 @@ function updateStates() {
   renderer.setStates(n, tile, nodeState, edgeState);
 }
 
+// links come from posts.json; only ever open https instagram.com pages, without referrer
+function openPost(i) {
+  try {
+    const u = new URL(posts[i].permalink);
+    if (u.protocol === 'https:' && /(^|\.)instagram\.com$/.test(u.hostname)) window.open(u.href, '_blank', 'noopener,noreferrer');
+  } catch { /* malformed link: ignore */ }
+}
+
 // ---------- picking ----------
 function pick(mx, my) {
   let best = -1, bw = Infinity;
@@ -274,7 +282,7 @@ canvas.addEventListener('pointerdown', e => {
   if (flying) {
     if (document.pointerLockElement !== canvas) { canvas.requestPointerLock(); return; }
     const h = pick(canvas.clientWidth / 2, canvas.clientHeight / 2);   // crosshair
-    if (h >= 0 && nodePost[h] >= 0) { document.exitPointerLock(); window.open(posts[nodePost[h]].permalink, '_blank', 'noopener'); }
+    if (h >= 0 && nodePost[h] >= 0) { document.exitPointerLock(); openPost(nodePost[h]); }
     return;
   }
   canvas.setPointerCapture(e.pointerId);
@@ -335,11 +343,11 @@ function endPointer(e) {
     layout.held = -1;
     layout.alphaTarget = 0;
     if (!drag.moved) {
-      if (nodePost[drag.id] >= 0) window.open(posts[nodePost[drag.id]].permalink, '_blank', 'noopener');
+      if (nodePost[drag.id] >= 0) openPost(nodePost[drag.id]);
       else { selected = selected === drag.id ? -1 : drag.id; updateStates(); }
     }
   } else if (!drag.moved && drag.id >= 0 && nodePost[drag.id] >= 0) {
-    window.open(posts[nodePost[drag.id]].permalink, '_blank', 'noopener');
+    openPost(nodePost[drag.id]);
   } else if (!drag.moved && selected >= 0) { selected = -1; updateStates(); }
   drag = null; interacting = false;
   canvas.classList.remove('dragging');

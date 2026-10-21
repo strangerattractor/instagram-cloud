@@ -1,3 +1,11 @@
+/* Inter, self-hosted (no request to Google with the visitor's IP) */
+@font-face {
+  font-family: Inter;
+  src: url(fonts/inter-latin.woff2) format('woff2');
+  font-weight: 400 600;
+  font-display: swap;
+}
+
 :root {
   --bg: #07070a;
   --fg: #f2f2f5;
@@ -331,3 +339,5 @@ body.locked #crosshair {
 }
 body.locked #gl { cursor: none; }
 .icon[aria-pressed=true] { color: #fff; background: var(--grad); }
+
+.sprites { position: absolute; }

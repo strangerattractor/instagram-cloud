@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Instagram Cloud</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- only this site's own files may load; nothing may be sent anywhere -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="style.css">
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <svg class="sprites" width="0" height="0" aria-hidden="true">
     <defs>
       <symbol id="i-tags" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></symbol>
       <symbol id="i-words" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></symbol>
